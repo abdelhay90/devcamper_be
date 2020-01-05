@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const slugify = require('slugify');
-const geocoder = require('../utils/geocoder');
 
 const CourseSchema = new mongoose.Schema({
     title: {
@@ -23,7 +21,7 @@ const CourseSchema = new mongoose.Schema({
     minimumSkill: {
         type: String,
         required: [true, 'Please add a minimum skill'],
-        enum: ['beginner', 'intermediate', 'advanced']
+        enum: ['beginner', 'intermediate', 'advanced'],
     },
     scholarshipAvailable: {
         type: Boolean,
@@ -36,41 +34,41 @@ const CourseSchema = new mongoose.Schema({
     bootcamp: {
         type: mongoose.Schema.ObjectId,
         ref: 'Bootcamp',
-        required: true
-    }
+        required: true,
+    },
 });
 
 // static method to get avg course tuitions
-CourseSchema.statics.getAverageCost = async function (bootcampId) {
+CourseSchema.statics.getAverageCost = async function(bootcampId) {
     const obj = await this.aggregate([
         {
-            $match: {bootcamp: bootcampId}
+            $match: { bootcamp: bootcampId },
         },
         {
             $group: {
                 _id: '$bootcamp',
-                averageCost: {$avg: '$tuition'}
-            }
-        }
+                averageCost: { $avg: '$tuition' },
+            },
+        },
     ]);
 
     try {
         await this.model('Bootcamp').findByIdAndUpdate(bootcampId, {
-            averageCost: Math.ceil(obj[0].averageCost / 10) * 10
-        })
+            averageCost: Math.ceil(obj[0].averageCost / 10) * 10,
+        });
     } catch (e) {
-        console.error(e)
+        console.error(e);
     }
 };
 
 // call getAverageCost after save
-CourseSchema.post('save', function () {
-    this.constructor.getAverageCost(this.bootcamp);
+CourseSchema.post('save', async function() {
+    await this.constructor.getAverageCost(this.bootcamp);
 });
 
 // call getAverageCost after save
-CourseSchema.pre('remove', function () {
-    this.constructor.getAverageCost(this.bootcamp);
+CourseSchema.pre('remove', async function() {
+    await this.constructor.getAverageCost(this.bootcamp);
 });
 
 
