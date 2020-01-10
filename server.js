@@ -12,6 +12,7 @@ dotenv.config(({path: './config/config.env'}));
 // Route files
 const bootcamps = require('./routes/bootcamps');
 const courses = require('./routes/courses');
+const auth = require('./routes/auth');
 
 // connect to DB
 connectDB();
@@ -35,6 +36,7 @@ app.use(express.static(path.join(__dirname, 'public/')));
 
 app.use('/api/v1/bootcamps', bootcamps);
 app.use('/api/v1/courses', courses);
+app.use('/api/v1/auth', auth);
 
 // error middleware
 app.use(errorHandler);
