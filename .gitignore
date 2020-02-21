@@ -4,3 +4,4 @@ config/config.env
 public/uploads
 .DS_Store
 _data
+.vscode

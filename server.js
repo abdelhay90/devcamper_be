@@ -8,7 +8,9 @@ const connectDB = require('./config/db');
 const fileUpload = require('express-fileupload');
 const errorHandler = require('./middleware/error');
 
-dotenv.config(({path: './config/config.env'}));
+dotenv.config(({
+    path: './config/config.env'
+}));
 
 // Route files
 const bootcamps = require('./routes/bootcamps');
@@ -35,7 +37,6 @@ if (process.env.NODE_ENV === 'development') {
 app.use(fileUpload());
 
 // static folder access
-console.log(path.join(__dirname, 'public/'));
 app.use(express.static(path.join(__dirname, 'public/')));
 
 app.use('/api/v1/bootcamps', bootcamps);
