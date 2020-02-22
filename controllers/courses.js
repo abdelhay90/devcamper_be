@@ -10,8 +10,14 @@ const ErrorResponse = require('../utils/errorResponse');
 exports.getCourses = asyncHandler(async (req, res, next) => {
 
     if (req.params.bootcampId) {
-        const courses = await Course.find({ bootcamp: req.params.bootcampId });
-        return res.status(200).json({ success: true, count: courses.length, data: courses });
+        const courses = await Course.find({
+            bootcamp: req.params.bootcampId
+        });
+        return res.status(200).json({
+            success: true,
+            count: courses.length,
+            data: courses
+        });
     } else {
         res.status(200).json(res.advancedResults);
 
@@ -30,7 +36,10 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
     if (!course) {
         return next(new ErrorResponse(`Course not found with id: ${req.params.id}`, 404));
     }
-    res.status(200).json({ success: true, data: course });
+    res.status(200).json({
+        success: true,
+        data: course
+    });
 });
 
 // @desc   Add new course
@@ -62,7 +71,7 @@ exports.createCourse = asyncHandler(async (req, res, next) => {
 // @route  PUT /api/v1/courses/:id
 // @access Private
 exports.updateCourse = asyncHandler(async (req, res, next) => {
-    const course = await Course.findById(req.params.id);
+    let course = await Course.findById(req.params.id);
     if (!course) {
         return next(new ErrorResponse(`Course not found with id: ${req.params.id}`, 404));
     }
@@ -77,7 +86,10 @@ exports.updateCourse = asyncHandler(async (req, res, next) => {
         runValidators: true,
     });
 
-    res.status(200).json({ success: true, data: course });
+    res.status(200).json({
+        success: true,
+        data: course
+    });
 });
 
 // @desc   delete specific course
@@ -96,5 +108,8 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
 
     await course.remove();
 
-    res.status(200).json({ success: true, data: {} });
+    res.status(200).json({
+        success: true,
+        data: {}
+    });
 });
